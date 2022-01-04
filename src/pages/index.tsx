@@ -4,6 +4,7 @@ import { trpc } from '@/utils/trpc'
 import type { NextPage } from 'next'
 import Image from 'next/image'
 import { useState } from 'react'
+
 import { inferQueryResponse } from './api/trpc/[trpc]'
 
 const buttonClass =
@@ -73,8 +74,10 @@ type PokemonFromServer = inferQueryResponse<'get-pokemon-by-id'>
 const PokemonListing: React.FC<{ pokemon: PokemonFromServer; vote: () => void }> = (props) => {
   return (
     <div className='h-64 flex flex-col p-4'>
-      <img
-        className='w-64 h-64'
+      <Image
+        width={256}
+        height={256}
+        className='max-w-64 max-h-64'
         src={props.pokemon.sprites.front_default || ''}
         alt='first_pokemon'
       />
