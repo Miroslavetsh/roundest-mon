@@ -16,11 +16,28 @@ const Home: NextPage = () => {
   const firstPokemon = trpc.useQuery(['get-pokemon-by-id', { id: first }])
   const secondPokemon = trpc.useQuery(['get-pokemon-by-id', { id: second }])
 
+  const voteMutation = trpc.useMutation(['cast-vote'])
+
   if (firstPokemon.isLoading || secondPokemon.isLoading)
-    return <div className='flex-col text-center align-middle'>Loading...</div>
+    return (
+      <div className='h-screen w-screen flex flex-col justify-center items-center'>
+        <div className='text-2xl text-center'>Which Pokemon is Rounder?</div>
+
+        <div className='p-2' />
+
+        <div className='border rounded p-8 flex justify-between items-center max-w-2xl'>
+          <div className='flex-col text-center align-middle'>Loading...</div>
+        </div>
+      </div>
+    )
 
   const voteForRoundest = (selected: number) => {
     return () => {
+      if (selected === first) {
+        voteMutation.mutate({ votedFor: first, votedAgainst: second })
+      } else {
+        voteMutation.mutate({ votedFor: second, votedAgainst: first })
+      }
       // TODO: fire mutation to persist changes
       console.log(selected)
       setIds(getOptionsForVote())

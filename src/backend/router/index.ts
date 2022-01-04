@@ -16,7 +16,7 @@ export const appRouter = trpc
     },
   })
   .mutation('cast-vote', {
-    input: z.object({ voteFor: z.number(), voteAgainst: z.number() }),
+    input: z.object({ votedFor: z.number(), votedAgainst: z.number() }),
     async resolve({ input }) {
       const voteInDb = await prisma.vote.create({
         data: {
