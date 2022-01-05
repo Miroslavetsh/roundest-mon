@@ -3,12 +3,13 @@ import { getOptionsForVote } from '@/utils/getRandomPokemon'
 import { trpc } from '@/utils/trpc'
 import type { NextPage } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useState } from 'react'
 
 import { inferQueryResponse } from './api/trpc/[trpc]'
 
 const buttonClass =
-  'bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mb-4'
+  'bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded-full shadow mb-4'
 
 const Home: NextPage = () => {
   const [ids, setIds] = useState<Array<number>>(() => getOptionsForVote())
@@ -63,6 +64,26 @@ const Home: NextPage = () => {
               <PokemonListing pokemon={secondPokemon.data} vote={voteForRoundest(second)} />
             </>
           )}
+      </div>
+
+      <div className='absolute flex items-center space-x-4 bottom-4 text-sm text-center pb-2'>
+        <div className='text-red-700 hover:underline text-xl font-bold'>
+          <Link href='/results' passHref>
+            Go To Results
+          </Link>
+        </div>
+
+        <div className='hover:underline'>
+          <Link href='https://github.com/Miroslavetsh/roundest-mon' passHref>
+            View on Git Hub
+          </Link>
+        </div>
+
+        <div className='hover:underline'>
+          <Link href='https://www.linkedin.com/in/myroslav-toloshnyi-93aba918b/' passHref>
+            My LinkedIn
+          </Link>
+        </div>
       </div>
     </div>
   )
