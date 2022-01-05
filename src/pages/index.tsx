@@ -20,19 +20,6 @@ const Home: NextPage = () => {
 
   const voteMutation = trpc.useMutation(['cast-vote'])
 
-  if (firstPokemon.isLoading || secondPokemon.isLoading)
-    return (
-      <div className='h-screen w-screen flex flex-col justify-center items-center'>
-        <div className='text-2xl text-center'>Which Pokemon is Rounder?</div>
-
-        <div className='p-2' />
-
-        <div className='border rounded p-8 flex justify-between items-center max-w-2xl'>
-          <div className='flex-col text-center align-middle'>Loading...</div>
-        </div>
-      </div>
-    )
-
   const voteForRoundest = (selected: number) => {
     return () => {
       if (selected === first) {
@@ -40,33 +27,106 @@ const Home: NextPage = () => {
       } else {
         voteMutation.mutate({ votedForId: second, votedAgainstId: first })
       }
-      // TODO: fire mutation to persist changes
       setIds(getOptionsForVote())
     }
   }
 
+  const dataLoaded =
+    !firstPokemon.isLoading && firstPokemon.data && !secondPokemon.isLoading && secondPokemon.data
+
   return (
-    <div className='h-screen w-screen flex flex-col justify-center items-center'>
+    <div className='h-screen w-screen flex flex-col justify-between items-center'>
       <div className='text-2xl text-center'>Which Pokemon is Rounder?</div>
 
       <div className='p-2' />
 
       <div className='border rounded p-8 flex justify-between items-center max-w-2xl'>
-        {!firstPokemon.isLoading &&
-          firstPokemon.data &&
-          !secondPokemon.isLoading &&
-          secondPokemon.data && (
-            <>
-              <PokemonListing pokemon={firstPokemon.data} vote={voteForRoundest(first)} />
+        {dataLoaded && (
+          <>
+            <PokemonListing pokemon={firstPokemon.data} vote={voteForRoundest(first)} />
 
-              <div className='p-8'>vs</div>
+            <div className='p-8'>vs</div>
 
-              <PokemonListing pokemon={secondPokemon.data} vote={voteForRoundest(second)} />
-            </>
-          )}
+            <PokemonListing pokemon={secondPokemon.data} vote={voteForRoundest(second)} />
+          </>
+        )}
+
+        {!dataLoaded && (
+          <svg
+            width='45'
+            height='45'
+            viewBox='0 0 45 45'
+            xmlns='http://www.w3.org/2000/svg'
+            stroke='#fff'>
+            <g fill='none' fillRule='evenodd' transform='translate(1 1)' strokeWidth='2'>
+              <circle cx='22' cy='22' r='6' strokeOpacity='0'>
+                <animate
+                  attributeName='r'
+                  begin='1.5s'
+                  dur='3s'
+                  values='6;22'
+                  calcMode='linear'
+                  repeatCount='indefinite'
+                />
+                <animate
+                  attributeName='stroke-opacity'
+                  begin='1.5s'
+                  dur='3s'
+                  values='1;0'
+                  calcMode='linear'
+                  repeatCount='indefinite'
+                />
+                <animate
+                  attributeName='stroke-width'
+                  begin='1.5s'
+                  dur='3s'
+                  values='2;0'
+                  calcMode='linear'
+                  repeatCount='indefinite'
+                />
+              </circle>
+              <circle cx='22' cy='22' r='6' strokeOpacity='0'>
+                <animate
+                  attributeName='r'
+                  begin='3s'
+                  dur='3s'
+                  values='6;22'
+                  calcMode='linear'
+                  repeatCount='indefinite'
+                />
+                <animate
+                  attributeName='stroke-opacity'
+                  begin='3s'
+                  dur='3s'
+                  values='1;0'
+                  calcMode='linear'
+                  repeatCount='indefinite'
+                />
+                <animate
+                  attributeName='stroke-width'
+                  begin='3s'
+                  dur='3s'
+                  values='2;0'
+                  calcMode='linear'
+                  repeatCount='indefinite'
+                />
+              </circle>
+              <circle cx='22' cy='22' r='8'>
+                <animate
+                  attributeName='r'
+                  begin='0s'
+                  dur='1.5s'
+                  values='6;1;2;3;4;5;6'
+                  calcMode='linear'
+                  repeatCount='indefinite'
+                />
+              </circle>
+            </g>
+          </svg>
+        )}
       </div>
 
-      <div className='absolute flex items-center space-x-4 bottom-4 text-sm text-center pb-2'>
+      <div className='flex items-center space-x-4 text-sm text-center pb-2'>
         <div className='text-red-700 hover:underline text-xl font-bold'>
           <Link href='/results' passHref>
             Go To Results
