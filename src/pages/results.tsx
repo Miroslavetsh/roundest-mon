@@ -1,0 +1,66 @@
+import { GetServerSideProps, NextPage } from 'next'
+
+import { prisma } from '@/backend/utils/prisma'
+import { AsyncReturnType } from '@/utils/ts-bs'
+import Image from 'next/image'
+
+type PokemonQueryResult = AsyncReturnType<typeof getPokemonInOrder>
+
+interface ResultsPropTypes {
+  pokemon: PokemonQueryResult
+}
+
+const PokemonListing: React.FC<{ pokemon: PokemonQueryResult[number] }> = (props) => {
+  return (
+    <div className='flex border p-4 items-center w-full odd:bg-gray-700'>
+      <Image
+        width={32}
+        height={32}
+        className='max-w-64 max-h-64'
+        src={props.pokemon.spriteUrl}
+        alt='pokemon'
+      />
+      <div className='capitalize'>{props.pokemon.name}</div>
+    </div>
+  )
+}
+
+const Results: NextPage<ResultsPropTypes> = (props) => {
+  return (
+    <div className='flex flex-col items-center'>
+      <h2 className='p-4 text-2xl text-center'>Results</h2>
+
+      <div className='max-w-2xl w-full'>
+        {props.pokemon.map((currentPokemon) => {
+          return <PokemonListing pokemon={currentPokemon} key={currentPokemon.id} />
+        })}
+      </div>
+    </div>
+  )
+}
+
+const getPokemonInOrder = async () => {
+  return await prisma.pokemon.findMany({
+    orderBy: {
+      VoteFor: { _count: 'desc' },
+    },
+    select: {
+      id: true,
+      name: true,
+      spriteUrl: true,
+      _count: {
+        select: {
+          VoteFor: true,
+          VoteAgainst: true,
+        },
+      },
+    },
+  })
+}
+
+export const getStaticProps: GetServerSideProps = async () => {
+  const pokemonOrdered = await getPokemonInOrder()
+  return { props: { pokemon: pokemonOrdered }, revalidate: 60 }
+}
+
+export default Results
