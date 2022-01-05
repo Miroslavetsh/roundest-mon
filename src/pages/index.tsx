@@ -40,7 +40,6 @@ const Home: NextPage = () => {
         voteMutation.mutate({ votedForId: second, votedAgainstId: first })
       }
       // TODO: fire mutation to persist changes
-      console.log(selected)
       setIds(getOptionsForVote())
     }
   }
@@ -78,7 +77,7 @@ const PokemonListing: React.FC<{ pokemon: PokemonFromServer; vote: () => void }>
         width={256}
         height={256}
         className='max-w-64 max-h-64'
-        src={props.pokemon.sprites.front_default || ''}
+        src={props.pokemon.spriteUrl}
         alt='first_pokemon'
       />
 

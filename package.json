@@ -6,7 +6,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "ts-node": "ts-node --compiler-options \"{\\\"module\\\"\":\\\"commonjs\\\"}\""
+    "ts-node": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\""
   },
   "dependencies": {
     "@prisma/client": "^3.7.0",
