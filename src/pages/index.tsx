@@ -35,9 +35,9 @@ const Home: NextPage = () => {
   const voteForRoundest = (selected: number) => {
     return () => {
       if (selected === first) {
-        voteMutation.mutate({ votedFor: first, votedAgainst: second })
+        voteMutation.mutate({ votedForId: first, votedAgainstId: second })
       } else {
-        voteMutation.mutate({ votedFor: second, votedAgainst: first })
+        voteMutation.mutate({ votedForId: second, votedAgainstId: first })
       }
       // TODO: fire mutation to persist changes
       console.log(selected)
