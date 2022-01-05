@@ -1,20 +1,24 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider  = "mysql"
-  url       = env("DATABASE_URL")
-  shadowUrl = env("SHADOW_URL")
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  shadowDatabaseUrl    = env("SHADOW_URL")
+  referentialIntegrity = "prisma"
 }
 
 model Vote {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  votedForId     Int
+  votedAgainstId Int
+}
 
-  votedFor     Int
-  votedAgainst Int
+model Pokemon {
+  id        Int    @id
+  name      String
+  spriteUrl String
 }

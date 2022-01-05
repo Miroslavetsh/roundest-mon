@@ -9,14 +9,14 @@ export const appRouter = trpc
   .query('get-pokemon-by-id', {
     input: z.object({ id: z.number() }),
     async resolve({ input }) {
-      const api = new PokemonClient()
+      const pokemon = await prisma.pokemon.findFirst({ where: { id: input.id } })
 
-      const pokemon = await api.getPokemonById(input.id)
-      return { name: pokemon.name, sprites: pokemon.sprites }
+      if (!pokemon) throw new Error("Pokemon doesn't exist")
+      return { name: pokemon.name, spriteUrl: pokemon.spriteUrl }
     },
   })
   .mutation('cast-vote', {
-    input: z.object({ votedFor: z.number(), votedAgainst: z.number() }),
+    input: z.object({ votedForId: z.number(), votedAgainstId: z.number() }),
     async resolve({ input }) {
       const voteInDb = await prisma.vote.create({
         data: {

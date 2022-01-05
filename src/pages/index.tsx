@@ -4,6 +4,7 @@ import { trpc } from '@/utils/trpc'
 import type { NextPage } from 'next'
 import Image from 'next/image'
 import { useState } from 'react'
+
 import { inferQueryResponse } from './api/trpc/[trpc]'
 
 const buttonClass =
@@ -34,12 +35,11 @@ const Home: NextPage = () => {
   const voteForRoundest = (selected: number) => {
     return () => {
       if (selected === first) {
-        voteMutation.mutate({ votedFor: first, votedAgainst: second })
+        voteMutation.mutate({ votedForId: first, votedAgainstId: second })
       } else {
-        voteMutation.mutate({ votedFor: second, votedAgainst: first })
+        voteMutation.mutate({ votedForId: second, votedAgainstId: first })
       }
       // TODO: fire mutation to persist changes
-      console.log(selected)
       setIds(getOptionsForVote())
     }
   }
@@ -73,9 +73,11 @@ type PokemonFromServer = inferQueryResponse<'get-pokemon-by-id'>
 const PokemonListing: React.FC<{ pokemon: PokemonFromServer; vote: () => void }> = (props) => {
   return (
     <div className='h-64 flex flex-col p-4'>
-      <img
-        className='w-64 h-64'
-        src={props.pokemon.sprites.front_default || ''}
+      <Image
+        width={256}
+        height={256}
+        className='max-w-64 max-h-64'
+        src={props.pokemon.spriteUrl}
         alt='first_pokemon'
       />
 
